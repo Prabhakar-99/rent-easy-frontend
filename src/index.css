@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+.react-datepicker__day--highlighted-red {
+  @apply bg-red-500 text-white rounded-full;
+}
