@@ -1,8 +1,12 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://rent-easy-backend-abl7.onrender.com', 
+  baseURL: 'https://rent-easy-backend-abl7.onrender.com/api', 
 });
+
+// const instance = axios.create({
+//   baseURL: 'http://localhost:5000/api',
+// });
 
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
