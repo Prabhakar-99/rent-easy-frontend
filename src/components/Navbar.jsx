@@ -4,6 +4,7 @@ import avatarImg from "../assets/avatar.png";
 
 function Navbar() {
   const [visible, setVisible] = useState(true);
+  const [open, setOpen] = useState(false); // ✅ mobile menu toggle
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
   const THRESHOLD = 30;
@@ -46,6 +47,9 @@ function Navbar() {
     window.location.href = "/login";
   };
 
+  // Helper to close menu after navigation
+  const closeMenu = () => setOpen(false);
+
   return (
     <>
       <nav
@@ -56,27 +60,39 @@ function Navbar() {
         {/* Left: Brand Name */}
         <h2 className="font-bold text-2xl tracking-wide">RentEasy</h2>
 
+        {/* Hamburger button (mobile only) */}
+        <button
+          className="lg:hidden block text-white text-2xl"
+          onClick={() => setOpen(!open)}
+        >
+          ☰
+        </button>
+
         {/* Middle: Nav Links */}
-        <ul className="flex gap-6 items-center">
+        <ul
+          className={`lg:flex lg:gap-6 lg:items-center absolute lg:static bg-blue-600 w-full left-0 lg:w-auto transition-all duration-300 ${
+            open ? "top-16" : "top-[-400px]"
+          }`}
+        >
           <li>
-            <Link to="/" className="px-3 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+            <Link to="/" onClick={closeMenu} className="block px-3 py-2 hover:bg-blue-700">
               Home
             </Link>
           </li>
           <li>
-            <Link to="/items" className="px-3 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+            <Link to="/items" onClick={closeMenu} className="block px-3 py-2 hover:bg-blue-700">
               Items
             </Link>
           </li>
           <li>
-            <Link to="/bookings" className="px-3 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+            <Link to="/bookings" onClick={closeMenu} className="block px-3 py-2 hover:bg-blue-700">
               My Bookings
             </Link>
           </li>
 
           {role === "admin" && (
             <li>
-              <Link to="/admin" className="px-3 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+              <Link to="/admin" onClick={closeMenu} className="block px-3 py-2 hover:bg-blue-700">
                 Admin Dashboard
               </Link>
             </li>
@@ -85,12 +101,12 @@ function Navbar() {
           {!token ? (
             <>
               <li>
-                <Link to="/login" className="px-3 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                <Link to="/login" onClick={closeMenu} className="block px-3 py-2 hover:bg-blue-700">
                   Login
                 </Link>
               </li>
               <li>
-                <Link to="/signup" className="px-3 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                <Link to="/signup" onClick={closeMenu} className="block px-3 py-2 hover:bg-blue-700">
                   Signup
                 </Link>
               </li>
@@ -98,8 +114,11 @@ function Navbar() {
           ) : (
             <li>
               <button
-                onClick={handleLogout}
-                className="px-3 py-2 rounded-md hover:bg-blue-700 transition duration-200"
+                onClick={() => {
+                  handleLogout();
+                  closeMenu();
+                }}
+                className="block px-3 py-2 hover:bg-blue-700"
               >
                 Logout
               </button>
@@ -107,9 +126,9 @@ function Navbar() {
           )}
         </ul>
 
-        {/* Right: User Profile */}
+        {/* Right: User Profile (desktop only) */}
         {token && (
-          <div className="flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <span className="font-medium">{username || "Guest"}</span>
             <img
               src={avatarImg}
@@ -120,7 +139,7 @@ function Navbar() {
         )}
       </nav>
 
-    
+      {/* Spacer to prevent content jump */}
       <div aria-hidden="true" className="h-16" />
     </>
   );

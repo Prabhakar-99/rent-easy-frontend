@@ -4,6 +4,7 @@ const instance = axios.create({
   baseURL: 'https://rent-easy-backend-abl7.onrender.com/api', 
 });
 
+
 // const instance = axios.create({
 //   baseURL: 'http://localhost:5000/api',
 // });
